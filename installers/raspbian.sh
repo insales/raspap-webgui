@@ -9,7 +9,7 @@ function update_system_packages() {
 
 function install_dependencies() {
     install_log "Installing required packages"
-    sudo apt-get install -y lighttpd php5-cgi git || install_error "Unable to install dependencies"
+    sudo apt-get install -y nginx-light php5-fpm git || install_error "Unable to install dependencies"
 }
 
 install_raspap

@@ -1,6 +1,6 @@
 raspap_dir="/etc/raspap"
 raspap_user="www-data"
-webroot_dir="/var/www/html"
+webroot_dir="/var/www/raspap"
 
 # Outputs a RaspAP INSTALL log line
 function install_log() {
@@ -26,19 +26,6 @@ function update_system_packages() {
 function install_dependencies() {
     # OVERLOAD THIS
     install_error "No function definition for install_dependencies"
-}
-
-# Enables PHP for lighttpd and restarts service for settings to take effect
-function enable_php_lighttpd() {
-    install_log "Enabling PHP for lighttpd"
-
-    sudo lighty-enable-mod fastcgi-php || install_error "Cannot enable fastcgi-php for lighttpd"
-    sudo /etc/init.d/lighttpd restart || install_error "Unable to restart lighttpd"
-}
-
-function clear_www_directory() {
-    sudo mv "$webroot_dir" "$webroot_dir.dist" || install_error "Cannot to backup directory $webroot_dir"
-    sudo mkdir "$webroot_dir" || install_error "Cannot to create directory $webroot_dir"
 }
 
 # Verifies existence and permissions of RaspAP directory
@@ -82,6 +69,15 @@ function move_config_file() {
     sudo chown -R $raspap_user:$raspap_user "$raspap_dir" || install_error "Unable to change file ownership for '$raspap_dir'"
 }
 
+function overwrite_nginx_config() {
+  install_log "Moving nginx configuration file"
+  sudo mv -f "$webroot_dir"/nginx.default.conf /etc/nginx/sites-available/default || install_error "Unable to overwrite nginx default site config"
+
+function reload_nginx() {
+  install_log "Reloading nginx"
+  sudo systemctl reload nginx || install_error "Unable to reload nginx, config file may be corrupted"
+}
+
 # Adds www-data user to the sudoers file with restrictions on what the user can execute
 function patch_system_files() {
     install_log "Patching system sudoers file"
@@ -100,12 +96,13 @@ function install_complete() {
 function install_raspap() {
     update_system_packages
     install_dependencies
-    enable_php_lighttpd
     create_raspap_directories
     clear_www_directory
     download_latest_files
     change_file_ownership
     move_config_file
+    overwrite_nginx_config
+    reload_nginx
     patch_system_files
     install_complete
 }
