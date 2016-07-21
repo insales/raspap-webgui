@@ -72,6 +72,7 @@ function move_config_file() {
 function overwrite_nginx_config() {
   install_log "Moving nginx configuration file"
   sudo mv -f "$webroot_dir"/nginx.default.conf /etc/nginx/sites-available/default || install_error "Unable to overwrite nginx default site config"
+}
 
 function reload_nginx() {
   install_log "Reloading nginx"
