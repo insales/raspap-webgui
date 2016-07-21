@@ -53,8 +53,8 @@ function enable_php_lighttpd() {
 }
 
 function clear_www_directory() {
-    mv "$webroot_dir" "$webroot_dir.dist" || install_error "Cannot to backup directory $webroot_dir"
-    mkdir "$webroot_dir" || install_error "Cannot to create directory $webroot_dir"
+    sudo mv "$webroot_dir" "$webroot_dir.dist" || install_error "Cannot to backup directory $webroot_dir"
+    sudo mkdir "$webroot_dir" || install_error "Cannot to create directory $webroot_dir"
 }
 
 # Verifies existence and permissions of RaspAP directory
