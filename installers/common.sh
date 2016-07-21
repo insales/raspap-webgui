@@ -1,6 +1,6 @@
 raspap_dir="/etc/raspap"
 raspap_user="www-data"
-webroot_dir="/var/www"
+webroot_dir="/var/www/html"
 
 # Outputs a RaspAP INSTALL log line
 function install_log() {
@@ -50,6 +50,11 @@ function enable_php_lighttpd() {
 
     sudo lighty-enable-mod fastcgi-php || install_error "Cannot enable fastcgi-php for lighttpd"
     sudo /etc/init.d/lighttpd restart || install_error "Unable to restart lighttpd"
+}
+
+function clear_www_directory() {
+    mv "$webroot_dir" "$webroot_dir.dist" || install_error "Cannot to backup directory $webroot_dir"
+    mkdir "$webroot_dir" || install_error "Cannot to create directory $webroot_dir"
 }
 
 # Verifies existence and permissions of RaspAP directory
@@ -119,6 +124,7 @@ function install_raspap() {
     install_dependencies
     enable_php_lighttpd
     create_raspap_directories
+    clear_www_directory
     download_latest_files
     change_file_ownership
     move_config_file
