@@ -16,22 +16,6 @@ function install_error() {
 ### NOTE: all the below functions are overloadable for system-specific installs
 ### NOTE: some of the below functions MUST be overloaded due to system-specific installs
 
-function config_installation() {
-    install_log "Configure installation"
-    echo -n "Install directory [${raspap_dir}]: "
-    read input
-    if [ ! -z "$input" ]; then
-        raspap_dir="$input"
-    fi
-
-    echo -n "Complete installation with these values? [y/N]: "
-    read answer
-    if [[ $answer != "y" ]]; then
-        echo "Installation aborted."
-        exit 0
-    fi
-}
-
 # Runs a system software update to make sure we're using all fresh packages
 function update_system_packages() {
     # OVERLOAD THIS
@@ -74,7 +58,7 @@ function download_latest_files() {
     fi
 
     install_log "Cloning latest files from github"
-    sudo git clone https://github.com/billz/raspap-webgui "$webroot_dir" || install_error "Unable to download files from github"
+    sudo git clone https://github.com/insales/raspap-webgui "$webroot_dir" || install_error "Unable to download files from github"
 }
 
 # Sets files ownership in web root directory
@@ -108,18 +92,12 @@ function patch_system_files() {
 
 function install_complete() {
     install_log "Installation completed!"
-    
-    echo -n "The system needs to be rebooted as a final step. Reboot now? [y/N]: "
-    read answer
-    if [[ $answer != "y" ]]; then
-        echo "Installation aborted."
-        exit 0
-    fi
+
+    echo -n "The system needs to be rebooted as a final step. Rebooting."
     sudo shutdown -h now || install_error "Unable to execute shutdown"
 }
 
 function install_raspap() {
-    config_installation
     update_system_packages
     install_dependencies
     enable_php_lighttpd
