@@ -98,7 +98,6 @@ function install_raspap() {
     update_system_packages
     install_dependencies
     create_raspap_directories
-    clear_www_directory
     download_latest_files
     change_file_ownership
     move_config_file
