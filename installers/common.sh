@@ -1,6 +1,7 @@
 raspap_dir="/etc/raspap"
 raspap_user="www-data"
-webroot_dir="/var/www/raspap"
+webroot_dir="/var/www"
+app_dir="raspap"
 
 # Outputs a RaspAP INSTALL log line
 function install_log() {
@@ -45,17 +46,17 @@ function download_latest_files() {
     fi
 
     install_log "Cloning latest files from github"
-    sudo git clone https://github.com/insales/raspap-webgui "$webroot_dir" || install_error "Unable to download files from github"
+    sudo git clone https://github.com/insales/raspap-webgui "$webroot_dir"/"$app_dir" || install_error "Unable to download files from github"
 }
 
 # Sets files ownership in web root directory
 function change_file_ownership() {
-    if [ ! -d "$webroot_dir" ]; then
+    if [ ! -d "$webroot_dir"/"$app_dir" ]; then
         install_error "Web root directory doesn't exist"
     fi
 
     install_log "Changing file ownership in web root directory"
-    sudo chown -R $raspap_user:$raspap_user "$webroot_dir" || install_error "Unable to change file ownership for '$webroot_dir'"
+    sudo chown -R $raspap_user:$raspap_user "$webroot_dir"/"$app_dir" || install_error "Unable to change file ownership for '$webroot_dir'"
 }
 
 # Move configuration file to the correct location
@@ -65,13 +66,13 @@ function move_config_file() {
     fi
 
     install_log "Moving configuration file to '$raspap_dir'"
-    sudo mv "$webroot_dir"/raspap.php "$raspap_dir" || install_error "Unable to move files to '$raspap_dir'"
+    sudo mv "$webroot_dir"/"$app_dir"/raspap.php "$raspap_dir" || install_error "Unable to move files to '$raspap_dir'"
     sudo chown -R $raspap_user:$raspap_user "$raspap_dir" || install_error "Unable to change file ownership for '$raspap_dir'"
 }
 
 function overwrite_nginx_config() {
   install_log "Moving nginx configuration file"
-  sudo mv -f "$webroot_dir"/nginx.default.conf /etc/nginx/sites-available/default || install_error "Unable to overwrite nginx default site config"
+  sudo mv -f "$webroot_dir"/"$app_dir"/nginx.default.conf /etc/nginx/sites-available/default || install_error "Unable to overwrite nginx default site config"
 }
 
 function reload_nginx() {
