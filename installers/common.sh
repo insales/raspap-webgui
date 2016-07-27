@@ -1,7 +1,7 @@
 raspap_dir="/etc/raspap"
 raspap_user="www-data"
 webroot_dir="/var/www"
-app_dir="raspap"
+app_dir="netconf"
 
 # Outputs a RaspAP INSTALL log line
 function install_log() {
