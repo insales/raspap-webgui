@@ -92,7 +92,7 @@ function install_complete() {
     install_log "Installation completed!"
 
     echo -n "The system needs to be rebooted as a final step. Rebooting."
-    sudo shutdown -h now || install_error "Unable to execute shutdown"
+    sudo reboot || install_error "Unable to execute shutdown"
 }
 
 function install_raspap() {
