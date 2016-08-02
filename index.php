@@ -123,6 +123,7 @@ $csrf_token = $_SESSION['csrf_token'];
 	                    <li>
 	                        <a href="index.php?page=wpa_conf"><i class="fa fa-signal fa-fw"></i> Configure client</a>
 	                    </li>
+                    <!--
 	                    <li>
 	                        <a href="index.php?page=hostapd_conf"><i class="fa fa-dot-circle-o fa-fw"></i> Configure hotspot</a>
 	                    </li>
@@ -139,6 +140,7 @@ $csrf_token = $_SESSION['csrf_token'];
 	                        <a href="index.php?page=torproxy_conf"><i class="fa fa-eye-slash fa-fw"></i> Configure TOR proxy</a>
 	                    </li>
 	                	<?php endif; ?>
+	                	-->
 	                    <li>
 	                        <a href="index.php?page=auth_conf"><i class="fa fa-lock fa-fw"></i> Configure Auth</a>
 	                    </li>
@@ -167,13 +169,13 @@ $csrf_token = $_SESSION['csrf_token'];
 				case "wlan0_info":
 					DisplayDashboard();
 					break;
-				case "dhcpd_conf":
+				/*case "dhcpd_conf":
 					DisplayDHCPConfig();
-					break;
+					break;*/
 				case "wpa_conf":
 					DisplayWPAConfig();
 					break;
-				case "hostapd_conf":
+				/*case "hostapd_conf":
 					DisplayHostAPDConfig();
 					break;
 				case "openvpn_conf":
@@ -181,13 +183,13 @@ $csrf_token = $_SESSION['csrf_token'];
 					break;
 				case "torproxy_conf":
 					DisplayTorProxyConfig();
-					break;
+					break;*/
 				case "auth_conf":
 					DisplayAuthConfig($config['admin_user'], $config['admin_pass']);
 					break;
-				case "save_hostapd_conf":
+				/*case "save_hostapd_conf":
 					SaveHostAPDConfig();
-					break;
+					break;*/
 				case "system_info":
 					DisplaySystem();
 					break;
