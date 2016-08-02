@@ -169,7 +169,7 @@ function DisplayDashboard(){
 	} elseif( isset($_POST['ifup_wlan0']) ) {
 		exec( 'ifconfig wlan0 | grep -i running | wc -l',$test );
 		if($test[0] == 0) {
-			exec( 'sudo ifup wlan0',$return );
+			exec( 'sudo wpa_cli -i wlan0 terminate ; sudo ifup wlan0',$return );
 		} else {
 			echo 'Interface already up';
 		}
