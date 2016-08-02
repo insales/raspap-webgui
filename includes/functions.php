@@ -76,7 +76,7 @@ function ConvertToChannel( $freq ) {
 * @return string
 */
 function ConvertToSecurity( $security ) {
-	
+
 	switch( $security ) {
 		case "[WPA2-PSK-CCMP][ESS]":
 			return "WPA2-PSK (AES)";
@@ -169,7 +169,13 @@ function DisplayDashboard(){
 	} elseif( isset($_POST['ifup_wlan0']) ) {
 		exec( 'ifconfig wlan0 | grep -i running | wc -l',$test );
 		if($test[0] == 0) {
-			exec( 'sudo wpa_cli -i wlan0 terminate ; sudo ifup wlan0',$return );
+			exec( 'sudo ifdown wlan0 ; sudo wpa_cli -i wlan0 terminate ; sudo ifup wlan0',$return );
+			?>
+			<script type="text/javascript">
+			current_uri = window.location.href;
+			window.setTimeout("window.location.href=current_uri", "2000");
+			</script>
+			<?php
 		} else {
 			echo 'Interface already up';
 		}
@@ -249,7 +255,7 @@ function DisplayDashboard(){
 		        </div><!-- /.panel-default -->
 		    </div><!-- /.col-lg-12 -->
 		</div><!-- /.row -->
-	<?php 
+	<?php
 }
 
 /**
@@ -261,7 +267,7 @@ function DisplayWPAConfig(){
 	?>
 	<div class="row">
 		<div class="col-lg-12">
-	    	<div class="panel panel-primary">           
+	    	<div class="panel panel-primary">
 				<div class="panel-heading"><i class="fa fa-signal fa-fw"></i> Configure client
 	            </div>
 		        <!-- /.panel-heading -->
@@ -271,7 +277,7 @@ function DisplayWPAConfig(){
 					<div class="row">
 						<div class="col-lg-12">
 
-					<?php 	
+					<?php
 					// save WPA settings
 					if( isset($_POST['SaveWPAPSKSettings']) ) {
 
@@ -284,7 +290,7 @@ update_config=1
 							$ssid = escapeshellarg( $_POST['ssid'.$x] );
 							$psk = escapeshellarg( $_POST['psk'.$x] );
 
-							if ( strlen($psk) >2 ) {	
+							if ( strlen($psk) >2 ) {
 								exec( 'wpa_passphrase '.$ssid. ' ' . $psk,$network );
 								foreach($network as $b) {
 				$config .= "$b
@@ -347,7 +353,7 @@ update_config=1
 
 						$numSSIDs = count($ssid);
 						$output = '<form method="POST" action="?page=wpa_conf" id="wpa_conf_form"><input type="hidden" id="Networks" name="Networks" /><div class="network" id="networkbox">';
-						
+
 						if ( $numSSIDs > 0 ) {
 							for( $ssids = 0; $ssids < $numSSIDs; $ssids++ ) {
 								$output .= '<div id="Networkbox'.$ssids.'" class="NetworkBoxes">
@@ -362,7 +368,7 @@ update_config=1
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button></div>';
 						}
 						$output .= '<div class="row"><div class="col-lg-6"><input type="submit" class="btn btn-primary" value="Scan for networks" name="Scan" /> <input type="button" class="btn btn-primary" value="Add network" onClick="AddNetwork();" /> <input type="submit" class="btn btn-primary" value="Save" name="SaveWPAPSKSettings" onmouseover="UpdateNetworks(this)" id="Save" disabled />';
-						$output .= '</form>'; 
+						$output .= '</form>';
 						echo $output;
 					}
 					?>
@@ -406,7 +412,7 @@ function DisplayHostAPDConfig(){
 	?>
 	<div class="row">
 	<div class="col-lg-12">
-    	<div class="panel panel-primary">           
+    	<div class="panel panel-primary">
 			<div class="panel-heading"><i class="fa fa-dot-circle-o fa-fw"></i> Configure hotspot
             </div>
         <!-- /.panel-heading -->
@@ -425,7 +431,7 @@ function DisplayHostAPDConfig(){
            	<div class="tab-content">
            		<p><?php echo $status; ?></p>
             	<div class="tab-pane fade in active" id="basic">
-            		
+
             		<h4>Basic settings</h4>
 					<form role="form" action="/?page=save_hostapd_conf" method="POST">
 					<div class="row">
@@ -482,7 +488,7 @@ function DisplayHostAPDConfig(){
 							?>
 							</select>
 						</div>
-					</div>	
+					</div>
 				</div>
 				<div class="tab-pane fade" id="security">
             		<h4>Security settings</h4>
@@ -490,7 +496,7 @@ function DisplayHostAPDConfig(){
 						<div class="form-group col-md-4">
             			<label for="code">Security type</label>
                 		<select class="form-control" name="wpa">
-                			<?php 
+                			<?php
 							foreach( $arrSecurity as $SecVal => $SecMode ) {
 								$select = '';
 								if( $SecVal == $arrConfig['wpa'] ) {
@@ -535,7 +541,7 @@ function DisplayHostAPDConfig(){
 				</div>
 
 				<input type="submit" class="btn btn-outline btn-primary" name="SaveHostAPDSettings" value="Save settings" />
-				<?php 
+				<?php
 				if($hostapdstatus[0] == 0) {
 					echo '<input type="submit" class="btn btn-success" name="StartHotspot" value="Start hotspot" />';
 				} else {
@@ -548,7 +554,7 @@ function DisplayHostAPDConfig(){
 	    <div class="panel-footer"> Information provided by hostapd</div>
 	</div><!-- /.col-lg-12 -->
 	</div><!-- /.row -->
-<?php 
+<?php
 }
 
 /**
@@ -587,8 +593,8 @@ function DisplayOpenVPNConfig() {
 	?>
 	<div class="row">
 	<div class="col-lg-12">
-    	<div class="panel panel-primary">           
-			<div class="panel-heading"><i class="fa fa-lock fa-fw"></i> Configure OpenVPN 
+    	<div class="panel panel-primary">
+			<div class="panel-heading"><i class="fa fa-lock fa-fw"></i> Configure OpenVPN
             </div>
         <!-- /.panel-heading -->
         <div class="panel-body">
@@ -603,7 +609,7 @@ function DisplayOpenVPNConfig() {
            	<div class="tab-content">
            		<p><?php echo $status; ?></p>
             	<div class="tab-pane fade in active" id="openvpnclient">
-            		
+
             		<h4>Client settings</h4>
 					<form role="form" action="?page=save_hostapd_conf" method="POST">
 
@@ -624,7 +630,7 @@ function DisplayOpenVPNConfig() {
             		<h4>Server settings</h4>
             		<div class="row">
 						<div class="form-group col-md-4">
-            			<label for="code">Port</label> 
+            			<label for="code">Port</label>
             			<input type="text" class="form-control" name="openvpn_port" value="<?php echo $arrServerConfig['port'] ?>" />
 						</div>
 					</div>
@@ -709,7 +715,7 @@ function DisplayTorProxyConfig(){
 	?>
 	<div class="row">
 	<div class="col-lg-12">
-    	<div class="panel panel-primary">           
+    	<div class="panel panel-primary">
 			<div class="panel-heading"><i class="fa fa-eye-slash fa-fw"></i> Configure TOR proxy
             </div>
         <!-- /.panel-heading -->
@@ -746,13 +752,13 @@ function DisplayTorProxyConfig(){
 							<label for="code">AutomapHostsOnResolve</label>
 							<input type="text" class="form-control" name="automaphostsonresolve" value="<?php echo $arrConfig['AutomapHostsOnResolve']; ?>" />
 						</div>
-					</div>	
+					</div>
 					<div class="row">
 						<div class="form-group col-md-4">
 							<label for="code">TransListenAddress</label>
 							<input type="text" class="form-control" name="translistenaddress" value="<?php echo $arrConfig['TransListenAddress']; ?>" />
 						</div>
-					</div>	
+					</div>
 					<div class="row">
 						<div class="form-group col-md-4">
 							<label for="code">DNSPort</label>
@@ -805,9 +811,9 @@ function DisplayTorProxyConfig(){
 						</div>
 					</div>
             	</div>
-		
+
 				<input type="submit" class="btn btn-outline btn-primary" name="SaveTORProxySettings" value="Save settings" />
-				<?php 
+				<?php
 				if( $torproxystatus[0] == 0 ) {
 					echo '<input type="submit" class="btn btn-success" name="StartTOR" value="Start TOR" />';
 				} else {
@@ -821,7 +827,7 @@ function DisplayTorProxyConfig(){
     </div><!-- /.panel-primary -->
 </div><!-- /.col-lg-12 -->
 </div><!-- /.row -->
-<?php 
+<?php
 }
 
 /**
@@ -945,7 +951,7 @@ function SaveHostAPDConfig(){
 
 		exec( "echo '$config' > /tmp/hostapddata", $return );
 		system( "sudo cp /tmp/hostapddata " . RASPI_HOSTAPD_CONFIG, $return );
-		
+
 			if( $return == 0 ) {
 			echo "Wifi Hotspot settings saved";
 		} else {
