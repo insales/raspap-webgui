@@ -281,9 +281,7 @@ function DisplayWPAConfig(){
 					// save WPA settings
 					if( isset($_POST['SaveWPAPSKSettings']) ) {
 
-						$config = 'ctrl_interface=DIR='. RASPI_WPA_CTRL_INTERFACE .' GROUP=netdev
-update_config=1
-';
+						$config = "country=RU\nctrl_interface=DIR=". RASPI_WPA_CTRL_INTERFACE ." GROUP=netdev\nupdate_config=1\n";
 						$networks = $_POST['Networks'];
 						for( $x = 0; $x < $networks; $x++ ) {
 							$network = '';
