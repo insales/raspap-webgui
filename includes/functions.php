@@ -309,9 +309,9 @@ function DisplayWPAConfig(){
 					// scan networks
 					} elseif( isset($_POST['Scan']) ) {
 						$return = '';
-						exec( 'sudo wpa_cli scan',$return );
+						exec( 'sudo wpa_cli -i wlan0 scan',$return );
 						sleep(3);
-						exec( 'sudo wpa_cli scan_results',$return );
+						exec( 'sudo wpa_cli -i wlan0 scan_results',$return );
 						for( $shift = 0; $shift < 4; $shift++ ) {
 							array_shift($return);
 						}
@@ -998,4 +998,3 @@ function SaveHostAPDConfig(){
 	}
 }
 ?>
-
