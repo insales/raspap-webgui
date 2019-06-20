@@ -169,7 +169,7 @@ function DisplayDashboard(){
 	} elseif( isset($_POST['ifup_wlan0']) ) {
 		exec( 'ifconfig wlan0 | grep -i running | wc -l',$test );
 		if($test[0] == 0) {
-			exec( 'sudo systemctl stop wpa_supplicant@wlan0.service ; sudo wpa_cli -i wlan0 terminate ; sudo systemctl start wpa_supplicant@wlan0.service',$return );
+			exec( 'sudo ip link set wlan0 down ; sudo wpa_cli -i wlan0 terminate ; sudo ip link set wlan0 up',$return );
 			?>
 			<script type="text/javascript">
 			current_uri = window.location.href;
